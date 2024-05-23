@@ -16,8 +16,6 @@ import top.kangyaocoding.ai.domain.chatgpt.ChatCompletionRequest;
 import top.kangyaocoding.ai.domain.chatgpt.ChatCompletionResponse;
 import top.kangyaocoding.ai.domain.chatgpt.Message;
 
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.util.Collections;
 
 /**
@@ -57,7 +55,7 @@ public class OpenAITest {
                 .build();
 
         IOpenAiApi openAiApi = new Retrofit.Builder()
-                .baseUrl(" https://api.openai.com/") // 你看可以替换任意你可以使用的接口。
+                .baseUrl(" https://api.openai.com/")
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
