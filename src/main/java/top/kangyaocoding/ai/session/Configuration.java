@@ -1,11 +1,12 @@
 package top.kangyaocoding.ai.session;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import okhttp3.sse.EventSource;
+import okhttp3.sse.EventSources;
 import org.jetbrains.annotations.NotNull;
+import top.kangyaocoding.ai.IOpenAiApi;
 
 /**
  * @Author K·Herbert
@@ -19,6 +20,15 @@ import org.jetbrains.annotations.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Configuration {
+
+    /* OpenAI API的接口实例 */
+    @Setter
+    private IOpenAiApi openAiApi;
+
+    /* 用于API请求的HTTP客户端 */
+    @Setter
+    private OkHttpClient okHttpClient;
+
     /**
      * apiKey用于识别调用方的身份。
      * 它是必填的，不能为空。
@@ -37,4 +47,13 @@ public class Configuration {
      * 它是可选的，如果需要身份验证，应提供authToken。
      */
     private String authToken;
+
+    /**
+     * 创建一个事件源工厂。
+     *
+     * @return 返回一个配置好的事件源工厂实例。
+     */
+    public EventSource.Factory createEventSourceFactory() {
+        return EventSources.createFactory(okHttpClient);
+    }
 }

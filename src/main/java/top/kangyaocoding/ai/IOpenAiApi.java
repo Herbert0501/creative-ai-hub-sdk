@@ -13,6 +13,9 @@ import top.kangyaocoding.ai.domain.chatgpt.ChatCompletionResponse;
  */
 
 public interface IOpenAiApi {
-    @POST("v1/chat/completions")
+
+    String V_1_CHAT_COMPLETIONS = "v1/chat/completions";
+
+    @POST(V_1_CHAT_COMPLETIONS)
     Single<ChatCompletionResponse> chatCompletion(@Body ChatCompletionRequest request);
 }

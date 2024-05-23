@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class DefaultOpenAiSessionFactory implements OpenAiSessionFactory {
 
     private final Configuration configuration; // 应用配置信息
-    private final Proxy proxy;
+    private final Proxy proxy;  // 代理
 
     /**
      * 构造函数
@@ -55,6 +55,8 @@ public class DefaultOpenAiSessionFactory implements OpenAiSessionFactory {
                 .writeTimeout(450, TimeUnit.SECONDS) // 写入超时时间
                 .readTimeout(450, TimeUnit.SECONDS) // 读取超时时间
                 .build();
+        // 将配置好的 OkHttpClient 设置到 Configuration 中
+        configuration.setOkHttpClient(okHttpClient);
         // 如果代理不为空，则创建新的 OkHttpClient 实例，并设置代理
         if (proxy != null) {
             okHttpClient = okHttpClient.newBuilder().proxy(proxy).build();
@@ -67,8 +69,10 @@ public class DefaultOpenAiSessionFactory implements OpenAiSessionFactory {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // 支持 RxJava 2 的调用适配器
                 .addConverterFactory(JacksonConverterFactory.create()) // 使用 Jackson 作为数据转换器
                 .build().create(IOpenAiApi.class);
+        // 将配置好的 OpenAI API 服务接口实例设置到 Configuration 中
+        configuration.setOpenAiApi(openAiApi);
 
         // 返回一个新的 OpenAiSession 实例，内部封装了 OpenAI API 的服务接口实例
-        return new DefaultOpenAiSession(openAiApi);
+        return new DefaultOpenAiSession(configuration);
     }
 }
