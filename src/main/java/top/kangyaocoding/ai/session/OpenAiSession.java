@@ -11,10 +11,12 @@ import top.kangyaocoding.ai.domain.chatgpt.ChatCompletionResponse;
 import top.kangyaocoding.ai.domain.common.OpenAiResponse;
 import top.kangyaocoding.ai.domain.edits.EditRequest;
 import top.kangyaocoding.ai.domain.edits.EditResponse;
+
 import top.kangyaocoding.ai.domain.embeddings.EmbeddingRequest;
 import top.kangyaocoding.ai.domain.embeddings.EmbeddingResponse;
 import top.kangyaocoding.ai.domain.files.DeleteFileResponse;
 import top.kangyaocoding.ai.domain.files.UploadFileResponse;
+import top.kangyaocoding.ai.domain.files.File;
 import top.kangyaocoding.ai.domain.images.ImageEditRequest;
 import top.kangyaocoding.ai.domain.images.ImageRequest;
 import top.kangyaocoding.ai.domain.images.ImageResponse;
@@ -23,7 +25,6 @@ import top.kangyaocoding.ai.domain.whisper.TranslationsRequest;
 import top.kangyaocoding.ai.domain.whisper.WhisperResponse;
 
 import java.time.LocalDate;
-import java.io.File;
 import java.util.List;
 
 /**
@@ -81,7 +82,7 @@ public interface OpenAiSession {
      * @param prompt    提示文本，用于指导图像编辑。
      * @return 返回图像编辑的结果响应对象。
      */
-    ImageResponse editImage(File image, String prompt);
+    ImageResponse editImage(java.io.File image, String prompt);
 
     /**
      * 对给定图像进行编辑。
@@ -90,7 +91,7 @@ public interface OpenAiSession {
      * @param imageEditRequest 图像编辑请求对象，包含编辑请求的详细信息。
      * @return 返回图像编辑的结果响应对象。
      */
-    ImageResponse editImage(File image, ImageEditRequest imageEditRequest);
+    ImageResponse editImage(java.io.File image, ImageEditRequest imageEditRequest);
 
     /**
      * 对给定图像进行编辑。
@@ -100,7 +101,7 @@ public interface OpenAiSession {
      * @param imageEditRequest 图像编辑请求对象，包含编辑请求的详细信息。
      * @return 返回图像编辑的结果响应对象。
      */
-    ImageResponse editImage(File image, File mask, ImageEditRequest imageEditRequest);
+    ImageResponse editImage(java.io.File image, java.io.File mask, ImageEditRequest imageEditRequest);
 
     /**
      * 生成嵌入向量。
@@ -139,7 +140,7 @@ public interface OpenAiSession {
      *
      * @return 返回文件信息的结果响应对象。
      */
-    OpenAiResponse<File> files();
+    List<File> files();
 
     /**
      * 上传文件。
@@ -147,7 +148,7 @@ public interface OpenAiSession {
      * @param file 要上传的文件。
      * @return 返回上传文件的结果响应对象。
      */
-    UploadFileResponse uploadFile(File file);
+    UploadFileResponse uploadFile(java.io.File file);
 
     /**
      * 上传文件，并指定文件用途。
@@ -156,7 +157,7 @@ public interface OpenAiSession {
      * @param purpose      文件用途描述。
      * @return 返回上传文件的结果响应对象。
      */
-    UploadFileResponse uploadFile(File file, String purpose);
+    UploadFileResponse uploadFile(java.io.File file, String purpose);
 
     /**
      * 删除文件。
@@ -173,7 +174,7 @@ public interface OpenAiSession {
      * @param transcriptionsRequest 转写请求对象，包含转写请求的详细信息。
      * @return 返回语音转文字的结果响应对象。
      */
-    WhisperResponse speed2TextTranscriptions(File file, TranscriptionsRequest transcriptionsRequest);
+    WhisperResponse speed2TextTranscriptions(java.io.File file, TranscriptionsRequest transcriptionsRequest);
 
     /**
      * 语音翻译。
@@ -182,7 +183,7 @@ public interface OpenAiSession {
      * @param translationsRequest 翻译请求对象，包含翻译请求的详细信息。
      * @return 返回语音翻译的结果响应对象。
      */
-    WhisperResponse speed2TextTranslations(File file, TranslationsRequest translationsRequest);
+    WhisperResponse speed2TextTranslations(java.io.File file, TranslationsRequest translationsRequest);
 
     /**
      * 查询账单信息。

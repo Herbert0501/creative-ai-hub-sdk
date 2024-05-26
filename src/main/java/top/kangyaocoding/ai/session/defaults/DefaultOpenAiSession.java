@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.reactivex.Single;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -24,6 +25,7 @@ import top.kangyaocoding.ai.domain.embeddings.EmbeddingRequest;
 import top.kangyaocoding.ai.domain.embeddings.EmbeddingResponse;
 import top.kangyaocoding.ai.domain.files.DeleteFileResponse;
 import top.kangyaocoding.ai.domain.files.UploadFileResponse;
+import top.kangyaocoding.ai.domain.files.File;
 import top.kangyaocoding.ai.domain.images.ImageEditRequest;
 import top.kangyaocoding.ai.domain.images.ImageRequest;
 import top.kangyaocoding.ai.domain.images.ImageResponse;
@@ -33,7 +35,6 @@ import top.kangyaocoding.ai.domain.whisper.WhisperResponse;
 import top.kangyaocoding.ai.session.Configuration;
 import top.kangyaocoding.ai.session.OpenAiSession;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -55,7 +56,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
     /**
      * 构造函数：初始化OpenAI API的接口实例。
      *
-     * @param openAiApi 用于与OpenAI服务进行通信的API接口实例。
+     * @param configuration 配置信息，包含OpenAI API的接口实例和配置参数。 用于与OpenAI服务进行通信的API接口实例。
      */
     public DefaultOpenAiSession(Configuration configuration) {
         this.configuration = configuration;
@@ -142,7 +143,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * @return 返回图像编辑的响应对象。
      */
     @Override
-    public ImageResponse editImage(File image, String prompt) {
+    public ImageResponse editImage(java.io.File image, String prompt) {
         ImageEditRequest imageEditRequest = ImageEditRequest.builder().prompt(prompt).build();
         return this.editImage(image, null, imageEditRequest);
     }
@@ -155,7 +156,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * @return 返回图像编辑的响应对象。
      */
     @Override
-    public ImageResponse editImage(File image, ImageEditRequest imageEditRequest) {
+    public ImageResponse editImage(java.io.File image, ImageEditRequest imageEditRequest) {
         return this.editImage(image, null, imageEditRequest);
     }
 
@@ -170,7 +171,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * @return ImageResponse 包含编辑后图像信息的响应对象。
      */
     @Override
-    public ImageResponse editImage(File image, File mask, ImageEditRequest imageEditRequest) {
+    public ImageResponse editImage(java.io.File image, java.io.File mask, ImageEditRequest imageEditRequest) {
         // 检查原始图像的合法性：存在性、格式和大小
         checkImage(image);
         checkImageFormat(image);
@@ -209,7 +210,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      *
      * @param image 需要校验的图片文件
      */
-    private void checkImage(File image) {
+    private void checkImage(java.io.File image) {
         if (Objects.isNull(image)) {
             log.error("image不能为空");
             throw new NullPointerException("image不能为空");
@@ -222,7 +223,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      *
      * @param image 需要校验的图片文件
      */
-    private void checkImageFormat(File image) {
+    private void checkImageFormat(java.io.File image) {
         // 校验图片格式是否为PNG
         if (!(image.getName().endsWith("png") || image.getName().endsWith("PNG"))) {
             log.error("image格式错误");
@@ -236,7 +237,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      *
      * @param image 需要校验的图片文件
      */
-    private void checkImageSize(File image) {
+    private void checkImageSize(java.io.File image) {
         // 校验图片大小是否超过4MB
         if (image.length() > 4 * 1024 * 1024) {
             log.error("image最大支持4MB");
@@ -306,8 +307,9 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * @return OpenAiResponse<File> 返回文件信息的响应对象。
      */
     @Override
-    public OpenAiResponse<File> files() {
-        return openAiApi.files().blockingGet();
+    public List<File> files() {
+        Single<OpenAiResponse<File>> files = this.openAiApi.files();
+        return files.blockingGet().getData();
     }
 
     /**
@@ -317,7 +319,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * @return UploadFileResponse 返回文件上传的响应对象。
      */
     @Override
-    public UploadFileResponse uploadFile(File file) {
+    public UploadFileResponse uploadFile(java.io.File file) {
         return uploadFile(file, "fine-tune");
     }
 
@@ -329,7 +331,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * @return UploadFileResponse 返回文件上传的响应对象。
      */
     @Override
-    public UploadFileResponse uploadFile(File file, String purpose) {
+    public UploadFileResponse uploadFile(java.io.File file, String purpose) {
         // 创建multipart/form-data类型的请求体以上传文件
         RequestBody fileBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", file.getName(), fileBody);
@@ -361,7 +363,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * @return 返回转写完成的文本响应。
      */
     @Override
-    public WhisperResponse speed2TextTranscriptions(File file, TranscriptionsRequest transcriptionsRequest) {
+    public WhisperResponse speed2TextTranscriptions(java.io.File file, TranscriptionsRequest transcriptionsRequest) {
         // 1. 文件封装为MultipartBody.Part 类型，用于上传
         RequestBody fileBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", file.getName(), fileBody);
@@ -395,7 +397,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * @return 返回翻译的响应对象，包含转换后的文本等信息。
      */
     @Override
-    public WhisperResponse speed2TextTranslations(File file, TranslationsRequest translationsRequest) {
+    public WhisperResponse speed2TextTranslations(java.io.File file, TranslationsRequest translationsRequest) {
         // 1. 上传语音文件
         RequestBody fileBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part multipartBody = MultipartBody.Part.createFormData("file", file.getName(), fileBody);

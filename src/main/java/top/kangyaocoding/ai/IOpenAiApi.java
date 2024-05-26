@@ -15,13 +15,13 @@ import top.kangyaocoding.ai.domain.edits.EditResponse;
 import top.kangyaocoding.ai.domain.embeddings.EmbeddingRequest;
 import top.kangyaocoding.ai.domain.embeddings.EmbeddingResponse;
 import top.kangyaocoding.ai.domain.files.DeleteFileResponse;
+import top.kangyaocoding.ai.domain.files.File;
 import top.kangyaocoding.ai.domain.files.UploadFileResponse;
 import top.kangyaocoding.ai.domain.images.ImageRequest;
 import top.kangyaocoding.ai.domain.images.ImageResponse;
 import top.kangyaocoding.ai.domain.whisper.WhisperResponse;
 
 import java.time.LocalDate;
-import java.io.File;
 import java.util.Map;
 
 /**

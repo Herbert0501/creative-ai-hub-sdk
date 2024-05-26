@@ -50,7 +50,7 @@ public class DefaultOpenAiSessionFactory implements OpenAiSessionFactory {
         OkHttpClient okHttpClient = new OkHttpClient
                 .Builder()
                 .addInterceptor(httpLoggingInterceptor) // 日志拦截器
-                .addInterceptor(new OpenAiInterceptor(configuration.getApiKey(), configuration.getAuthToken())) // API 密钥和认证令牌拦截器
+                .addInterceptor(new OpenAiInterceptor(configuration.getApiKey())) // API 密钥和认证令牌拦截器
                 .connectTimeout(450, TimeUnit.SECONDS) // 连接超时时间
                 .writeTimeout(450, TimeUnit.SECONDS) // 写入超时时间
                 .readTimeout(450, TimeUnit.SECONDS) // 读取超时时间

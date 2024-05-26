@@ -16,55 +16,37 @@ import java.io.IOException;
  * 这个拦截器会自动为每个请求添加 API 密钥和认证令牌。
  * @Date 2024-05-22 17:40
  */
-public class OpenAiInterceptor implements Interceptor{
-    private final String apiKey; // API 密钥
-    private final String authToken; // 认证令牌
+public class OpenAiInterceptor implements Interceptor {
 
-    /**
-     * OpenAiInterceptor 构造函数。
-     *
-     * @param apiKey API 密钥，用于授权访问 OpenAI 服务。
-     * @param authToken 认证令牌，用于验证请求的合法性。
-     */
-    public OpenAiInterceptor(String apiKey, String authToken) {
-        this.apiKey = apiKey;
-        this.authToken = authToken;
+    /** OpenAi apiKey 需要在官网申请 */
+    private final String apiKeyBySystem;
+    /** 访问授权接口的认证 Token */
+
+    public OpenAiInterceptor(String apiKeyBySystem) {
+        this.apiKeyBySystem = apiKeyBySystem;
     }
 
-    /**
-     * intercept 方法是 Interceptor 接口的必须实现方法，用于在请求发送前拦截请求，并进行认证信息的添加。
-     *
-     * @param chain 提供了请求和响应的 Chain，允许拦截器修改请求或直接返回响应。
-     * @return 返回经过可能修改后的请求产生的响应。
-     * @throws IOException 如果发生 I/O 错误。
-     */
     @NotNull
     @Override
     public Response intercept(Chain chain) throws IOException {
-        // 在请求链中继续处理请求，添加认证信息。
-        return chain.proceed(auth(this.apiKey, chain.request()));
-    }
+        // 1. 获取原始 Request
+        Request original = chain.request();
 
-    /**
-     * auth 方法用于为请求添加认证信息。
-     *
-     * @param apiKey API 密钥。
-     * @param originalRequest 原始请求。
-     * @return 返回添加了认证信息的请求。
-     */
-    private Request auth(String apiKey, Request originalRequest){
-        // 为 URL 添加认证令牌查询参数
-        HttpUrl url = originalRequest.url().newBuilder()
-                .addQueryParameter("token", authToken)
-                .build();
+        // 2. 读取 apiKey；优先使用自己传递的 apiKey
+        String apiKeyByUser = original.header("apiKey");
+        String apiKey = null == apiKeyByUser ? apiKeyBySystem : apiKeyByUser;
 
-        // 创建并返回一个新请求，包含认证头和内容类型头。
-        return originalRequest.newBuilder()
-                .url(url)
+        // 3. 构建 Request
+        Request request = original.newBuilder()
+                .url(original.url())
                 .header(Header.AUTHORIZATION.getValue(), "Bearer " + apiKey)
                 .header(Header.CONTENT_TYPE.getValue(), ContentType.JSON.getValue())
-                .method(originalRequest.method(), originalRequest.body())
+                .method(original.method(), original.body())
                 .build();
+
+        // 4. 返回执行结果
+        return chain.proceed(request);
     }
+
 }
 

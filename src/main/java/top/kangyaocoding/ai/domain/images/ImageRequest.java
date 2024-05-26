@@ -13,48 +13,96 @@ import java.io.Serializable;
  * @Date 2024-05-23 19:09
  */
 
+@Data
 @Slf4j
-@Getter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageRequest extends ImageEnum implements Serializable {
+public class ImageRequest implements Serializable {
 
     /**
-     * 提示信息，用于描述图片请求的详细要求。
-     * 该字段是必须的，不能为空。
+     * 提示词：dall-e-2支持1000字符、dall-e-3支持4000字符
      */
-    @NonNull
     private String prompt;
-
     /**
-     * 为每个提示生成的完成次数，默认为1。
-     * 如果需要生成多张图片，可以调整该数值。
+     * 支持dall-e-2、dall-e-3
+     *
+     * @see Model
      */
     @Builder.Default
-    private Integer n = 1;
+    private String model = Model.DALL_E_3.getName();
 
     /**
-     * 图片大小，默认为256x256。
-     * 可以根据需要选择不同的图片大小。
+     * 此参数仅仅dall-e-3,默认值：standard
+     *
+     * @see Quality
      */
-    @Builder.Default
-    private String size = Size.size_256.getCode();
+    private String quality;
 
     /**
-     * 图片格式化方式，默认为URL格式。
-     * 可以选择将图片以URL形式或B64_JSON格式返回。
+     * 为每个提示生成的个数，dall-e-3只能为1。
+     */
+    private Integer n;
+    /**
+     * 图片尺寸，默认值：1024x1024
+     * dall-e-2支持：256x256, 512x512, or 1024x1024
+     * dall-e-3支持：1024x1024, 1792x1024, or 1024x1792
+     *
+     * @see ImageEnum
+     */
+    private String size;
+    /**
+     * 此参数仅仅dall-e-3,取值范围：vivid、natural
+     * 默认值：vivid
+     *
+     * @see Style
+     */
+    private String style;
+
+    /**
+     * 生成图片格式：url、b64_json
+     *
+     * @see ImageEnum.ResponseFormat
      */
     @JsonProperty("response_format")
-    @Builder.Default
-    private String responseFormat = ResponseFormat.URL.getCode();
+    private String responseFormat;
 
-    /**
-     * 用户标识，可用于标记请求的来源用户。
-     * 该字段可以为空，具体使用根据业务需求决定。
-     */
-    @Setter
     private String user;
 
+    /**
+     * 图片生成模型
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum Model {
+        DALL_E_2("dall-e-2"),
+        DALL_E_3("dall-e-3"),
+        ;
+        private final String name;
+    }
+
+    /**
+     * 生成图片质量
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum Quality {
+        STANDARD("standard"),
+        HD("hd"),
+        ;
+        private final String name;
+    }
+
+    /**
+     * 生成图片风格
+     */
+    @Getter
+    @AllArgsConstructor
+    public enum Style {
+        VIVID("vivid"),
+        NATURAL("natural"),
+        ;
+        private final String name;
+    }
 }
