@@ -22,8 +22,8 @@ import top.kangyaocoding.ai.domain.whisper.TranscriptionsRequest;
 import top.kangyaocoding.ai.domain.whisper.TranslationsRequest;
 import top.kangyaocoding.ai.domain.whisper.WhisperResponse;
 
-import java.time.LocalDate;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -49,6 +49,18 @@ public interface OpenAiSession {
      * @throws JsonProcessingException 当处理 JSON 数据发生错误时抛出。
      */
     EventSource chatCompletions(ChatCompletionRequest chatCompletionRequest, EventSourceListener eventSourceListener) throws JsonProcessingException;
+
+    /**
+     * 用户可以配置自己的API主机和密钥。
+     *
+     * @param apiHostByUser         用户提供的API主机地址
+     * @param apiKeyByUser          用户的API密钥
+     * @param chatCompletionRequest 聊天完成请求对象，包含具体的聊天上下文和请求参数。
+     * @param eventSourceListener   事件监听器，用于处理服务器推送的聊天完成事件。
+     * @return 返回一个EventSource实例，已配置好相关参数并开始监听事件。
+     * @throws JsonProcessingException 如果处理聊天完成请求或响应时发生JSON序列化或反序列化错误。
+     */
+    EventSource chatCompletions(String apiHostByUser, String apiKeyByUser, ChatCompletionRequest chatCompletionRequest, EventSourceListener eventSourceListener) throws JsonProcessingException;
 
     /**
      * 进行文本编辑操作。
@@ -77,8 +89,8 @@ public interface OpenAiSession {
     /**
      * 对给定图像进行编辑。
      *
-     * @param image     要编辑的图像文件。
-     * @param prompt    提示文本，用于指导图像编辑。
+     * @param image  要编辑的图像文件。
+     * @param prompt 提示文本，用于指导图像编辑。
      * @return 返回图像编辑的结果响应对象。
      */
     ImageResponse editImage(File image, String prompt);
@@ -86,7 +98,7 @@ public interface OpenAiSession {
     /**
      * 对给定图像进行编辑。
      *
-     * @param image         要编辑的图像文件。
+     * @param image            要编辑的图像文件。
      * @param imageEditRequest 图像编辑请求对象，包含编辑请求的详细信息。
      * @return 返回图像编辑的结果响应对象。
      */
@@ -95,8 +107,8 @@ public interface OpenAiSession {
     /**
      * 对给定图像进行编辑。
      *
-     * @param image         要编辑的图像文件。
-     * @param mask          标记文件，用于指导图像编辑。
+     * @param image            要编辑的图像文件。
+     * @param mask             标记文件，用于指导图像编辑。
      * @param imageEditRequest 图像编辑请求对象，包含编辑请求的详细信息。
      * @return 返回图像编辑的结果响应对象。
      */
@@ -152,8 +164,8 @@ public interface OpenAiSession {
     /**
      * 上传文件，并指定文件用途。
      *
-     * @param file         要上传的文件。
-     * @param purpose      文件用途描述。
+     * @param file    要上传的文件。
+     * @param purpose 文件用途描述。
      * @return 返回上传文件的结果响应对象。
      */
     UploadFileResponse uploadFile(File file, String purpose);
@@ -169,7 +181,7 @@ public interface OpenAiSession {
     /**
      * 语音转文字。
      *
-     * @param file         包含语音数据的文件。
+     * @param file                  包含语音数据的文件。
      * @param transcriptionsRequest 转写请求对象，包含转写请求的详细信息。
      * @return 返回语音转文字的结果响应对象。
      */
@@ -178,7 +190,7 @@ public interface OpenAiSession {
     /**
      * 语音翻译。
      *
-     * @param file         包含语音数据的文件。
+     * @param file                包含语音数据的文件。
      * @param translationsRequest 翻译请求对象，包含翻译请求的详细信息。
      * @return 返回语音翻译的结果响应对象。
      */

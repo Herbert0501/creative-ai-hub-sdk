@@ -13,6 +13,7 @@ import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
 import org.jetbrains.annotations.NotNull;
 import top.kangyaocoding.ai.IOpenAiApi;
+import top.kangyaocoding.ai.common.Constants;
 import top.kangyaocoding.ai.domain.billing.BillingUsage;
 import top.kangyaocoding.ai.domain.billing.Subscription;
 import top.kangyaocoding.ai.domain.chatgpt.ChatCompletionRequest;
@@ -46,16 +47,16 @@ import java.util.*;
 @Slf4j
 public class DefaultOpenAiSession implements OpenAiSession {
     /* 配置信息 */
-    private Configuration configuration;
+    private final Configuration configuration;
     /* OpenAi 接口 */
-    private IOpenAiApi openAiApi;
+    private final IOpenAiApi openAiApi;
     /* 事件源工厂 */
-    private EventSource.Factory eventSourceFactory;
+    private final EventSource.Factory eventSourceFactory;
 
     /**
-     * 构造函数：初始化OpenAI API的接口实例。
+     * 构造函数，用于初始化DefaultOpenAiSession对象。
      *
-     * @param openAiApi 用于与OpenAI服务进行通信的API接口实例。
+     * @param configuration 配置对象，包含了与OpenAI API交互所需的信息，如API密钥和事件源设置。
      */
     public DefaultOpenAiSession(Configuration configuration) {
         this.configuration = configuration;
@@ -75,25 +76,25 @@ public class DefaultOpenAiSession implements OpenAiSession {
         return this.openAiApi.chatCompletion(chatCompletionRequest).blockingGet();
     }
 
-    /**
-     * 请求聊天完成建议的事件源。
-     *
-     * @param chatCompletionRequest 聊天完成请求对象，包含必要的参数来构建API请求。
-     * @param eventSourceListener   事件源监听器，用于处理来自API的响应事件。
-     * @return EventSource 返回一个事件源实例，用于监听聊天完成的建议。
-     * @throws JsonProcessingException 当JSON处理（序列化或反序列化）发生错误时抛出。
-     * @throws RuntimeException        如果聊天请求中的stream参数为false，抛出此异常。
-     */
     @Override
     public EventSource chatCompletions(ChatCompletionRequest chatCompletionRequest, EventSourceListener eventSourceListener) throws JsonProcessingException {
+        return chatCompletions(Constants.NULL, Constants.NULL, chatCompletionRequest, eventSourceListener);
+    }
+
+    @Override
+    public EventSource chatCompletions(String apiHostByUser, String apiKeyByUser, ChatCompletionRequest chatCompletionRequest, EventSourceListener eventSourceListener) throws JsonProcessingException {
         // 核心参数校验，特别检查stream参数必须为true
         if (!chatCompletionRequest.isStream()) {
             throw new RuntimeException("Illegal parameter stream is false.");
         }
+        // 获取用户自定义的API主机和API密钥，如果未指定，则使用默认值
+        String apiHost = (Constants.NULL.equals(apiHostByUser) || apiHostByUser.isEmpty()) ? configuration.getApiHost() : apiHostByUser;
+        String apiKey = (Constants.NULL.equals(apiKeyByUser) || apiKeyByUser.isEmpty()) ? configuration.getApiKey() : apiKeyByUser;
 
         // 构建向OpenAI API发送的请求
         Request request = new Request.Builder()
-                .url(configuration.getApiHost().concat(IOpenAiApi.V_1_CHAT_COMPLETIONS))
+                .url(apiHost.concat(IOpenAiApi.V_1_CHAT_COMPLETIONS))
+                .addHeader("apiKey", apiKey)
                 .post(RequestBody.create(MediaType.parse(ContentType.JSON.getValue()), new ObjectMapper().writeValueAsString(chatCompletionRequest)))
                 .build();
 
@@ -356,7 +357,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
     /**
      * 将语音文件转换为文本转写。
      *
-     * @param file 需要转换的语音文件。
+     * @param file                  需要转换的语音文件。
      * @param transcriptionsRequest 包含转写请求的详细参数，如语言、模型、提示语等。
      * @return 返回转写完成的文本响应。
      */
@@ -390,7 +391,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
     /**
      * 将语音文件转换为文本的翻译请求。
      *
-     * @param file 语音文件，将被转换为文本并进行翻译。
+     * @param file                语音文件，将被转换为文本并进行翻译。
      * @param translationsRequest 包含翻译请求的详细参数，如模型、提示语、响应格式和温度等。
      * @return 返回翻译的响应对象，包含转换后的文本等信息。
      */
@@ -418,6 +419,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
         // 发起翻译请求并获取结果
         return this.openAiApi.speed2TextTranscriptions(multipartBody, requestBodyMap).blockingGet();
     }
+
     /**
      * 查询当前订阅信息, 查询余额。
      *
@@ -433,7 +435,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * 查询指定时间范围内的账单使用情况。
      *
      * @param starDate 开始日期，不可为null。
-     * @param endDate 结束日期，不可为null。
+     * @param endDate  结束日期，不可为null。
      * @return BillingUsage 返回指定时间范围内的账单使用情况。
      */
     @Override

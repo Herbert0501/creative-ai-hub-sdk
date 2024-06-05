@@ -14,7 +14,6 @@ import top.kangyaocoding.ai.IOpenAiApi;
  * @Date 2024-05-22 17:55
  */
 
-@Getter
 @Slf4j
 @Data
 @NoArgsConstructor
@@ -22,11 +21,9 @@ import top.kangyaocoding.ai.IOpenAiApi;
 public class Configuration {
 
     /* OpenAI API的接口实例 */
-    @Setter
     private IOpenAiApi openAiApi;
 
     /* 用于API请求的HTTP客户端 */
-    @Setter
     private OkHttpClient okHttpClient;
 
     /**
@@ -46,6 +43,7 @@ public class Configuration {
      * authToken用于授权访问。
      * 它是可选的，如果需要身份验证，应提供authToken。
      */
+    @Deprecated
     private String authToken;
 
     /**

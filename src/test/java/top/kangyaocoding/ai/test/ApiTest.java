@@ -45,11 +45,10 @@ public class ApiTest {
 
     @Test
     public void test_completions() {
-        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
-                .builder()
+        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .messages(Collections.singletonList(Message.builder()
                         .role(Constants.Role.USER)
-                        .content("你好！这是我第一次调用OpenAI API。")
+                        .content("你好！")
                         .build()))
                 .model(ChatCompletionRequest.Model.GPT_3_5_TURBO.getCode())
                 .build();
@@ -74,7 +73,7 @@ public class ApiTest {
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .messages(Collections.singletonList((Message.builder()
                         .role(Constants.Role.USER)
-                        .content("你好！这是我第五次调用OpenAI API。帮我写一个冒泡排序")).build()))
+                        .content("你好！帮我写一个Python冒泡排序")).build()))
                 .model(ChatCompletionRequest.Model.GPT_3_5_TURBO.getCode())
                 .stream(true)
                 .build();
@@ -83,8 +82,11 @@ public class ApiTest {
         CountDownLatch latch = new CountDownLatch(1);
         StringBuilder responseBuilder = new StringBuilder();
 
+        String apiHost = "";
+        String apiKey = "";
+
         // 发起聊天完成请求，并设置事件监听器，用于处理接收到的事件响应
-        EventSource eventSource = openAiSession.chatCompletions(chatCompletionRequest, new EventSourceListener() {
+        EventSource eventSource = openAiSession.chatCompletions(apiHost,apiKey,chatCompletionRequest, new EventSourceListener() {
             @Override
             public void onEvent(EventSource eventSource, String id, String type, String data) {
                 try {
