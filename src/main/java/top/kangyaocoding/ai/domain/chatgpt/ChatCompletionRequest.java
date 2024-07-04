@@ -95,10 +95,18 @@ public class ChatCompletionRequest implements Serializable {
     public enum Model {
         /** gpt-3.5-turbo 模型代码 */
         GPT_3_5_TURBO("gpt-3.5-turbo"),
+        /** gpt-3.5-turbo-16k 模型代码 */
+        GPT_3_5_TURBO_16K("gpt-3.5-turbo-16k"),
+        /** gpt-4o 模型代码 **/
+        GPT_4O("gpt-4o"),
         /** GPT 4.0 模型代码 */
         GPT_4("gpt-4"),
         /** GPT 4.0 超长上下文模型代码 */
         GPT_4_32K("gpt-4-32k"),
+        /** DALL·E 3 模型代码 */
+        DALL_E_3("dall-e-3"),
+        /** Whisper 1 模型代码 */
+        whisper_1("whisper-1"),
         ;
         /**
          * 模型的代码标识。

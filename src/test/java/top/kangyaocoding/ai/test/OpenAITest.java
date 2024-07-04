@@ -55,18 +55,18 @@ public class OpenAITest {
                 .build();
 
         IOpenAiApi openAiApi = new Retrofit.Builder()
-                .baseUrl(" https://api.openai.com/")
+                .baseUrl("https://4.0.wokaai.com/")
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build().create(IOpenAiApi.class);
 
-        Message message = Message.builder().role(Constants.Role.USER).content("写一个java冒泡排序").build();
+        Message message = Message.builder().role(Constants.Role.USER).content("你好！").build();
 
         ChatCompletionRequest chatCompletion = ChatCompletionRequest
                 .builder()
                 .messages(Collections.singletonList(message))
-                .model(ChatCompletionRequest.Model.GPT_3_5_TURBO.getCode())
+                .model(ChatCompletionRequest.Model.GPT_3_5_TURBO_16K.getCode())
                 .build();
 
         Single<ChatCompletionResponse> chatCompletionResponseSingle = openAiApi.chatCompletion(chatCompletion);
