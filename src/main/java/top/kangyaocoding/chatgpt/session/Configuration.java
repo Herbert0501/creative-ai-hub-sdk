@@ -40,13 +40,6 @@ public class Configuration {
     private String apiHost;
 
     /**
-     * authToken用于授权访问。
-     * 它是可选的，如果需要身份验证，应提供authToken。
-     */
-    @Deprecated
-    private String authToken;
-
-    /**
      * 创建一个事件源工厂。
      *
      * @return 返回一个配置好的事件源工厂实例。

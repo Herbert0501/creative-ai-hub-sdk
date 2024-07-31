@@ -18,17 +18,14 @@ import java.io.IOException;
  */
 public class OpenAiInterceptor implements Interceptor {
     private final String apiKeyBySystem; // API 密钥
-    private final String authToken; // 认证令牌
 
     /**
      * OpenAiInterceptor 构造函数。
      *
      * @param apiKeyBySystem API 密钥，用于授权访问 OpenAI 服务。
-     * @param authToken 认证令牌，用于验证请求的合法性。
      */
-    public OpenAiInterceptor(String apiKeyBySystem, String authToken) {
+    public OpenAiInterceptor(String apiKeyBySystem) {
         this.apiKeyBySystem = apiKeyBySystem;
-        this.authToken = authToken;
     }
 
     /**
@@ -59,9 +56,7 @@ public class OpenAiInterceptor implements Interceptor {
      */
     private Request auth(String apiKeyBySystem, Request originalRequest) {
         // 为 URL 添加认证令牌查询参数
-        HttpUrl url = originalRequest.url().newBuilder()
-                .addQueryParameter("token", authToken)
-                .build();
+        HttpUrl url = originalRequest.url();
 
         // 获取用户传递的 ApiKey，如果为空则使用系统默认值
         String apiKeyByUser = originalRequest.header("apiKey");
