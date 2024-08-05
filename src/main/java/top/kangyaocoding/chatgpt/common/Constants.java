@@ -10,6 +10,7 @@ import lombok.Getter;
 
 public class Constants {
     public final static String NULL = "NULL";
+
     @Getter
     public enum Role {
 

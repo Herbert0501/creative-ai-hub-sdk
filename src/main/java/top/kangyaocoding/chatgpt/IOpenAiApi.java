@@ -20,8 +20,8 @@ import top.kangyaocoding.chatgpt.domain.images.ImageRequest;
 import top.kangyaocoding.chatgpt.domain.images.ImageResponse;
 import top.kangyaocoding.chatgpt.domain.whisper.WhisperResponse;
 
-import java.time.LocalDate;
 import java.io.File;
+import java.time.LocalDate;
 import java.util.Map;
 
 /**
@@ -70,8 +70,8 @@ public interface IOpenAiApi {
      * 图像编辑接口。
      * 编辑或修改已存在的图像。
      *
-     * @param image 表示要编辑的图像的MultipartBody.Part对象。
-     * @param mask 表示编辑的掩码的MultipartBody.Part对象。
+     * @param image          表示要编辑的图像的MultipartBody.Part对象。
+     * @param mask           表示编辑的掩码的MultipartBody.Part对象。
      * @param requestBodyMap 包含额外请求参数的Map。
      * @return 返回ImageResponse对象，包含编辑后的图像结果。
      */
@@ -100,7 +100,7 @@ public interface IOpenAiApi {
     /**
      * 上传文件接口。
      *
-     * @param file 表示要上传文件的MultipartBody.Part对象。
+     * @param file    表示要上传文件的MultipartBody.Part对象。
      * @param purpose 文件用途说明。
      * @return 返回UploadFileResponse对象，包含上传文件的结果。
      */
@@ -142,7 +142,7 @@ public interface IOpenAiApi {
     /**
      * 语音转文字接口。
      *
-     * @param file 表示音频文件的MultipartBody.Part对象。
+     * @param file           表示音频文件的MultipartBody.Part对象。
      * @param requestBodyMap 包含额外请求参数的Map。
      * @return 返回WhisperResponse对象，包含转换后的文字结果。
      */
@@ -154,7 +154,7 @@ public interface IOpenAiApi {
      * 语音翻译接口。
      * 将提供的音频文件翻译为英文。
      *
-     * @param file 表示音频文件的MultipartBody.Part对象。
+     * @param file           表示音频文件的MultipartBody.Part对象。
      * @param requestBodyMap 包含额外请求参数的Map。
      * @return 返回WhisperResponse对象，包含翻译后的结果。
      */
@@ -176,7 +176,7 @@ public interface IOpenAiApi {
      * 查询指定日期范围内的账单使用情况。
      *
      * @param starDate 查询开始日期。
-     * @param endDate 查询结束日期。
+     * @param endDate  查询结束日期。
      * @return 返回BillingUsage对象，包含账单使用情况的详细信息。
      */
     @GET("v1/dashboard/billing/usage")

@@ -37,7 +37,7 @@ public class ApiTest {
         }
         // 配置环境
         Configuration configuration = new Configuration();
-        configuration.setApiHost("https://gf.nekoapi.com/");
+        configuration.setApiHost("https://api.playaichat.cn/");
         configuration.setApiKey(apiKey);
         OpenAiSessionFactory factory = new DefaultOpenAiSessionFactory(configuration, null);
         this.openAiSession = factory.openAiSession();
@@ -48,17 +48,13 @@ public class ApiTest {
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .messages(Collections.singletonList(Message.builder()
                         .role(Constants.Role.USER)
-                        .content("你好！")
+                        .content("1+1=")
                         .build()))
                 .model(ChatCompletionRequest.Model.GPT_3_5_TURBO.getCode())
                 .build();
         ChatCompletionResponse chatCompletionResponse = openAiSession.completions(chatCompletionRequest);
 
-        chatCompletionResponse.getChoices().forEach(
-                choice -> {
-                    log.info("{}", choice);
-                }
-        );
+        log.info(String.valueOf(chatCompletionResponse));
     }
 
     /**
@@ -86,7 +82,7 @@ public class ApiTest {
         String apiKey = "";
 
         // 发起聊天完成请求，并设置事件监听器，用于处理接收到的事件响应
-        EventSource eventSource = openAiSession.chatCompletions(apiHost,apiKey,chatCompletionRequest, new EventSourceListener() {
+        EventSource eventSource = openAiSession.chatCompletions(apiHost, apiKey, chatCompletionRequest, new EventSourceListener() {
             @Override
             public void onEvent(EventSource eventSource, String id, String type, String data) {
                 try {
@@ -105,6 +101,7 @@ public class ApiTest {
                     latch.countDown(); // 确保异常情况下也能退出等待
                 }
             }
+
             @Override
             public void onFailure(EventSource eventSource, Throwable t, Response response) {
                 log.error("事件源发生错误", t);

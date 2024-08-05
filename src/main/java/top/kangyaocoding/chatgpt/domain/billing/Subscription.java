@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * @Author K·Herbert
- * @Description  订阅信息类，用于表示用户的订阅详情。包含订阅的各种状态信息、付款方式、取消状态、计划等。
+ * @Description 订阅信息类，用于表示用户的订阅详情。包含订阅的各种状态信息、付款方式、取消状态、计划等。
  * @Date 2024-05-23 18:48
  */
 @Data

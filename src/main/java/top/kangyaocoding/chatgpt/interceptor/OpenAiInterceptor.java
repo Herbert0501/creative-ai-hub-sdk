@@ -50,7 +50,7 @@ public class OpenAiInterceptor implements Interceptor {
     /**
      * auth 方法用于为请求添加认证信息。
      *
-     * @param apiKeyBySystem 默认 API 密钥。
+     * @param apiKeyBySystem  默认 API 密钥。
      * @param originalRequest 原始请求。
      * @return 返回添加了认证信息的请求。
      */

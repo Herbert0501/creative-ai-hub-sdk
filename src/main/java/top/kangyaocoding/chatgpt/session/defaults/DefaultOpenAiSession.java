@@ -81,7 +81,7 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * 它通过调用另一个重载方法来实现，该方法允许指定API主机和密钥。
      *
      * @param chatCompletionRequest 聊天完成请求的详细参数。
-     * @param eventSourceListener 用于监听事件源事件的监听器。
+     * @param eventSourceListener   用于监听事件源事件的监听器。
      * @return 一个事件源实例，用于与OpenAI API进行实时通信。
      * @throws JsonProcessingException 如果无法处理JSON序列化和反序列化时抛出。
      */
@@ -94,10 +94,10 @@ public class DefaultOpenAiSession implements OpenAiSession {
      * 这个方法允许用户指定API主机和密钥，用于与OpenAI API进行通信。
      * 如果用户没有指定API主机和密钥，将使用默认配置。
      *
-     * @param apiHostByUser 用户指定的API主机。
-     * @param apiKeyByUser 用户指定的API密钥。
+     * @param apiHostByUser         用户指定的API主机。
+     * @param apiKeyByUser          用户指定的API密钥。
      * @param chatCompletionRequest 聊天完成请求的详细参数。
-     * @param eventSourceListener 用于监听事件源事件的监听器。
+     * @param eventSourceListener   用于监听事件源事件的监听器。
      * @return 一个事件源实例，用于与OpenAI API进行实时通信。
      * @throws JsonProcessingException 如果无法处理JSON序列化和反序列化时抛出。
      */

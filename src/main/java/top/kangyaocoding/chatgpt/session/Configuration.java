@@ -1,6 +1,8 @@
 package top.kangyaocoding.chatgpt.session;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.sse.EventSource;

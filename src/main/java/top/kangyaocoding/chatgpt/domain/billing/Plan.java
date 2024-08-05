@@ -5,7 +5,7 @@ import lombok.Data;
 
 /**
  * @Author K·Herbert
- * @Description  Plan类用于表示一个计划的简要信息。它包含了计划的标题和唯一标识符。
+ * @Description Plan类用于表示一个计划的简要信息。它包含了计划的标题和唯一标识符。
  * @Date 2024-05-23 18:49
  */
 @Data
