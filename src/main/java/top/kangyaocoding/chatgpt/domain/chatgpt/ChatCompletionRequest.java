@@ -100,8 +100,7 @@ public class ChatCompletionRequest implements Serializable {
         GPT_4_TURBO("gpt-4-turbo"),
         GPT_4("gpt-4"),
         GPT_4_32K("gpt-4-32k"),
-        DALL_E_2("dall-e-2"),
-        DALL_E_3("dall-e-3");
+        ;
         /**
          * 模型的代码标识。
          */

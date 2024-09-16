@@ -22,6 +22,11 @@ import java.io.Serializable;
 public class ImageRequest extends ImageEnum implements Serializable {
 
     /**
+     * 模型
+     */
+    private String model = Model.DALL_E_2.getCode();
+
+    /**
      * 提示信息，用于描述图片请求的详细要求。
      * 该字段是必须的，不能为空。
      */
@@ -57,4 +62,13 @@ public class ImageRequest extends ImageEnum implements Serializable {
     @Setter
     private String user;
 
+    @Getter
+    @AllArgsConstructor
+    public enum Model {
+        DALL_E_2("dall-e-2"),
+        DALL_E_3("dall-e-3"),
+        ;
+
+        private final String code;
+    }
 }
