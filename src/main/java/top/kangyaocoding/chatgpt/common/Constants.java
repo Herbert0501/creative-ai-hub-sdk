@@ -14,12 +14,10 @@ public class Constants {
     @Getter
     public enum Role {
 
-        SYSTEM("system"),
-        USER("user"),
-        ASSISTANT("assistant"),
+        SYSTEM("system"), USER("user"), ASSISTANT("assistant"),
         ;
 
-        private String code;
+        private final String code;
 
         Role(String code) {
             this.code = code;
